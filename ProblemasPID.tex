@@ -14,37 +14,37 @@
         questões. O bloco de código \ref{DefFT} apresenta
 
         \begin{lstlisting}[language=Matlab,label=DefFT,caption=Definindo FTs]
-            %Planta
-            Nump = 0.25;
-            Denp = conv([1 1], [1 5]);
-            H = tf(Nump, Denp);
-            
-            %Controlador
-            Kp = 1373.92;
-            Ki = 5e3;
-            Kd = 150.88;
-            
-            Numc = [Kd Kp Ki];
-            Denc = [1 0];
-            Gc =  tf(Numc, Denc);
-            
-            %Ganho em Malha Aberta
-            Gma = H*Gc;
-            
-            %Ganho em Malha Fechada
-            Gmf = Gma/(1+Gma);
+%Planta
+Nump = 0.25;
+Denp = conv([1 1], [1 5]);
+H = tf(Nump, Denp);
+
+%Controlador
+Kp = 1373.92;
+Ki = 5e3;
+Kd = 150.88;
+
+Numc = [Kd Kp Ki];
+Denc = [1 0];
+Gc =  tf(Numc, Denc);
+
+%Ganho em Malha Aberta
+Gma = H*Gc;
+
+%Ganho em Malha Fechada
+Gmf = Gma/(1+Gma);
         \end{lstlisting}
 
         Para observar o comportamento do sistema em MF, utilizou-se da entrada a degrau, como mostrado 
         no bloco de código \ref{DQ1}. 
 
         \begin{lstlisting}[language=Matlab,label=DQ1,caption=Resposta ao degrau]
-            %% Q a)
-            [y,t] = step(Gmf, 0.35);
-            figure
-            plot(t, y, 'LineWidth', 2);
-            legend('c(t)')
-            grid        
+%% Q a)
+[y,t] = step(Gmf, 0.35);
+figure
+plot(t, y, 'LineWidth', 2);
+legend('c(t)')
+grid        
         \end{lstlisting}
 
         Ao utilizar \mcode{[y,t] = step(Gmf)} a função \mcode{step} não gera um gráfico
@@ -58,16 +58,87 @@
             \caption{Gráfico da resposta ao degrau do sistema}
             \label{fig1a}        
         \end{figure}
-
+    
+    \newpage
     \subsection*{b) Determine o LGR  sem e com controlador}
         O lugar geométrico das raízes (LGR) pode ser facilmente obtido através da função \mcode{rlocus} nativa do matlab. 
         O sistema sem o controlador é constituido unicamente da planta do sistema. O LGR do sistema com o controlador, por outro 
-        lado, é o produto no domínio ``s'', da FT do controlador com a FT da planta. O gráfico \ref{} apresenta os respectivos 
-        LGRS 
+        lado, é o produto no domínio ``s'', da FT do controlador com a FT da planta. O bloco de código \ref{LGR}, apresenta o script
+        desenvolvido para obtenção dos gráficos.
+
+        \begin{lstlisting}[language=Matlab,label=LGR,caption=LGRs do sistema]
+%% Q b)
+%LGR sem controlador
+figure
+rlocus(H)
+title('LGR sem controlador')
+axis([-6 0.1 -5 5])
+grid
+%LGR com controlador
+figure
+rlocus(Gma)
+axis([-6 0.1 -5 5])
+title('LGR com controlador')
+grid     
+        \end{lstlisting}
         
+        A Figura \ref{fig:LGRsem} apresenta o LGR do sistema sem o controlador e a Figura \ref{fig:LGRcom} apresenta o LGR do sistema com o controlador. 
+        
+        \begin{figure}[!ht]
+            \centering
+            \begin{minipage}{0.5\textwidth}
+                \centering
+                \includegraphics[width=0.9\textwidth]{Figuras/ProblemaPID/LGRsemControladorq1.eps}
+                \caption{LGR do sistema sem o controlador}
+                \label{fig:LGRsem}
+            \end{minipage}\hfill
+            \begin{minipage}{0.5\textwidth}
+                \centering
+                \includegraphics[width=0.9\textwidth]{Figuras/ProblemaPID/LGRcomControladorq1.eps}
+                \caption{LGR do sistema com o controlador}
+                \label{fig:LGRcom}
+            \end{minipage}
+        \end{figure}
+
+        %VERIFICAR ADIÇÃO DE COMENTÁRIOS SOBRE O RESULTADO OBTIDO (IMPORTANTE)
+    
+    \subsection*{c) Determine o tempo de amostragem.}
+        O tempo de amostragem pode ser determinado de diferentes formas, desde que seja suficiente para não ocasionar problemas de \textit{aliasing}, ou seja, 
+        sobreposição dos espectros. Para isso, sabe-se pelo Teorema de Nyquist que o período de amostragem ``$T_s$'' deve ser tal que a frequência de amostragem ``$f_s$''
+        seja o dobro da frequência de corte ``$f_c$'' do sistema, $\frac{1}{T_s} = f_s \ge f_c$.
+
+        O Teorema de Nyquist é bem fundamentado e pode ser amplamente utilizado, porém outra abordagem é amplamente utilizada no ambiente prático, dado a não trivialidade
+        da obtenção da frequência de corte do sistema. Sob essa abordagem é feita uma aproximação de que o tempo de amostragem deve ser menor ou igual ao tempo de subida 
+        da resposta ao degrau do sistema ``$T_r$'', dividido por dez: $T_s = \frac{T_r}{10}$. Essa será a abordagem utilizada para todas as questões.
+        
+        O bloco de código \ref{Ts}, apresenta a obtenção do tempo de amostragem. Nesse primeiro momento, verificou-se além do tempo de subida, a frequência de corte do 
+        sistema, para corroborar o fato de que o Teorema de Nyquist está sendo cumprido. 
+
+        \begin{lstlisting}[language=Matlab,label=Ts,caption=Tempo de amostragem]
+%% Q c)
+figure
+bode(Gmf)
+set(findall(gcf,'type','line'), 'linewidth', 2)
+grid
+% Tempo de amostragem
+Ts = stepinfo(Gmf).RiseTime/10;
+        \end{lstlisting}
+
+        O tempo de amostragem é um atributo de nome \mcode{RiseTime} do método nativo \mcode{stepinfo(Gmf)}, dessa forma, pode-se obté-lo utilizando 
+        \mcode{stepinfo(Gmf).RiseTime}. 
+        O tempo de subida da resposta ao degrau foi de $T_r = 48 \text{ ms}$, então, o tempo de amostragem foi $T_s = 4,8 \text{ ms}$ e a frequência de amostragem
+        $f_s = 209.1734 \text{ Hz}$. Ao verificar o diagrama de bode, Figura \ref{DB}, será possível determinar a frequência de corte do sistema. 
+    
         \begin{figure}[!h]
             \centering
-            \includegraphics[width = 0.75\linewidth]{Figuras/ProblemaPID/step.eps}
-            \caption{Gráfico da resposta ao degrau do sistema}
-            \label{fig1a}        
+            \includegraphics[width = 0.75\linewidth]{Figuras/ProblemaPID/bodeq1c.eps}
+            \caption{Diagrama de Bode}
+            \label{DB}        
         \end{figure}
+
+        A frequência de corte é aquela no qual o ganho do sistema é de $-3 \text{ dB}$. Pelo gráfico, o ponto está aproximadamente na frequência de corte do sistema 
+        $f_c = \frac{\omega_c}{2\pi} = \frac{40.6}{2\pi} = 6.4617 \text{ Hz}$. 
+        
+        Podemos verificar que a técnica amplamente utilizada em ambientes práticos nos retorna frequências de amostragens muito maiores que a frequência de corte e 
+        garantem assim que a discretização esteja satisfazendo ao Teorema de Nyquist. De toda forma, é interessante perceber que ao utilizar a aproximação dada por esse 
+        método o nosso resultado não será o mais otimizado e poderá pecar em termos de custo de projeto.
