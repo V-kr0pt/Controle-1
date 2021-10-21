@@ -1,0 +1,55 @@
+\documentclass{article}
+\usepackage[portuges]{babel}
+\usepackage{epsfig,subfigure,cite,graphicx}
+\usepackage{indentfirst}
+\setlength{\parindent}{20pt}
+\usepackage[cmex10]{amsmath}
+ \usepackage[left=2.5cm,top=2.5cm,right=2.5cm,bottom=2.5cm]{geometry}
+
+% load package with ``framed'' and ``numbered'' option.
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+
+% something NOT relevant to the usage of the package.
+\usepackage{url}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{18pt}
+\title{CONTROLE 1}
+
+% //////////////////////////////////////////////////
+
+\begin{document}
+\section*{ATIVIDADE 1 - CONTROLE 1}
+
+\indent Aluno: Vitor de Sousa França\\
+\indent Matrícula: 20180041455\\
+\indent 22 de Outubro de 2021\\
+
+\section*{Questão 1: Considerando-se o sistema:  }
+    \begin{equation*}
+        G = \frac{0.25(K_d s^2 + K_p s +K_i)}{s(s+1)(s+5)}
+    \end{equation*}
+    
+    Em que $K_d = 150.88$, $K_p = 1373.92$ e $K_i = 5000$
+    
+    \subsection*{a) Utilizando MATLAB realizar as simulações do sistema em malha fechada no domínio do tempo contínuo.}
+
+O sinal x(kT), com a frequência de amostragem desejada pode ser construido utilizando o Matlab através do script a seguir.
+
+\begin{lstlisting}[language=Matlab,caption='Primeira Simulação']
+%% Q1 a)
+fo = 10; %freq principal do sinal
+fs = 1000; %freq. de amostragem
+
+Ts = 1/fs; %periodo de amostragem
+T = 2*(fs/fo); %periodo de duas oscilacoes completas
+
+k = 0:(T-1); %vetor contendo qtd de elementos = qtd de amostras
+t = Ts*k; %distanciando igualmente as amostras de um periodo de amostragem
+
+%criando o vetor sinal amostradocolor
+x = cos(2*pi*fo*t) + 0.5*sin(2*pi*5*fo*t+pi/4);
+\end{lstlisting}
+
+
+
+\end{document}
