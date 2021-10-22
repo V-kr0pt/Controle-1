@@ -142,3 +142,51 @@ Ts = stepinfo(Gmf).RiseTime/10;
         Podemos verificar que a técnica amplamente utilizada em ambientes práticos nos retorna frequências de amostragens muito maiores que a frequência de corte e 
         garantem assim que a discretização esteja satisfazendo ao Teorema de Nyquist. De toda forma, é interessante perceber que ao utilizar a aproximação dada por esse 
         método o nosso resultado não será o mais otimizado e poderá pecar em termos de custo de projeto.
+    
+        
+    \subsection*{d) Discretize o controlador.}
+        O controlador PID, é um controlador clássico que no domínio ``s'' de Laplace, é definido 
+        pela FT apresentada na equação \ref{eq:PID}
+
+        \begin{equation}
+            G_c(s) = kp + \frac{k_i}{s} + k_ds
+            \label{eq:PID}
+        \end{equation}
+        
+        Para discretizar o controlador, devemos passar a FT do domínio ``s'' para o domínio discreto 
+        `z'', seguindo a correspondência $ s=\frac{1}{T_s}\ln(z)$, em quem ``$T_s$'' é o período de 
+        amostragem. Porém, visto que iremos obter resultados não lineares, essa transformação 
+        poderá ser custosa computacionalmente. Então, frequentemente são utilizadas aproximações para
+        essa equação. Nessa avaliação será utilizado o método de Tustin, também conhecido como 
+        aproximação bilinear ou trapezoidal, apresentada pela equação \ref{eq:Tustin}.
+
+        \begin{equation}
+            s = \frac{T_s}{2} \cdot \frac{1+z^{-1}}{1-z^{-1}}
+            \label{eq:Tustin}
+        \end{equation}
+
+        Realizando a substituição da equação \ref{eq:Tustin} em \ref{eq:PID}, obtemos a equação \ref{eq:GcZ}.
+        
+        \begin{equation}
+            G_c(z) = \frac{(k_p+\frac{T_sk_i}{2}+\frac{2k_d}{T_s})z^2 + (T_sk_i-\frac{4K_d}{T_s})z - k_p + \frac{T_sk_i}{2} + \frac{2k_d}{T_s}}
+            {z^2-1}
+            \label{eq:GcZ}
+        \end{equation}
+
+        Ao substituir os valores do tempo de amostragem e dos ganhos $k_p$, $k_i$, $k_d$, na equação \ref{eq:GcZ} obtem-se a
+        FT discreta \ref{eq:GcZf}.
+
+        \begin{equation}
+            G_c(z) = \frac{(6,451 \cdot 10^4)z^2 - (1,262 \cdot 10^5)z - 6,176 \cdot 10^4}{z^2-1}
+            \label{eq:GcZf}
+        \end{equation}
+        
+        A discretização também pode ser realizada através de uma função \mcode{c2d} nativa do Matlab. Utilizando 
+        \mcode{c2d(Gc, Ts, 'tustin')} em que \mcode{Gc} foi a função de transferência do controlador no domínio ``s'' e \mcode{Ts}
+        o período de amostragem, obteve-se a mesma função de transferência \ref{eq:GcZf}.
+
+
+
+    \subsection*{e) Realize simulações do sistema em malha fechada e faça uma comparação entre a resposta no tempo contínuo e discreto.}
+    
+        
