@@ -264,15 +264,16 @@ mape = mean(ape(isfinite(ape))); %retira o erro percentual do y=0
         
         - O primeiro critério: $Q(1)= 6e-4 > 0$, satisfeito; \\
         - O segundo critério: $-1^3 Q(-1) = 5.2314 > 0$, também trata-se de uma verdade;\\
-        - O terceiro critério: $0.8114 < 1$, satisfeito.
+        - O terceiro critério: $|a_0| = 0.8114 < 1 = |a_n| $, satisfeito.
         \newpage
-        Os  próximos critérios só são possíveis de ser avaliados através da Tabela \ref{tab:J1}. Para nosso caso só é necessário verificar mais um 
-        critério. 
+        Os  próximos critérios só são possíveis de ser avaliados através da Tabela \ref{tab:J1}. Para nosso caso só é necessário
+        verificar mais um critério. 
         \begin{table}[!ht]
             \centering
             \caption{Análise de estabilidade} 
-            \begin{tabular}{l r r r r}
+            \begin{tabular}{l| r r r r}
                  & $z^0$ & $z^1$ & $z^2$ & $z^3$\\
+                \hline
                 1 & -0{,}8114 & 2{,}616 & -2{,}804 & 1\\
                 2 & 1 & -2{,}804 & 2{,}616 & -0{,}8114\\
                 3 & -0{,}3408 & 0{,}682 & -0{,}3416 & 0\\
