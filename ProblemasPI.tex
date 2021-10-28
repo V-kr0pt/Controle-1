@@ -74,7 +74,7 @@ grid
 \subsubsection*{b)}
 
     Como já feito anteriormente na avaliação, através da função \mcode{rlocus} é possível traçar o LGR 
-    do sistema. A Figura \ref{fig:LGR1Asem} é o LGR do sistema sem o controlador. Pode-se verificar que
+    do sistema. A Figura \ref{fig:LGR1Bsem} é o LGR do sistema sem o controlador. Pode-se verificar que
     o sistema possui três pólos, com um deles na origem e os outros dois, um par complexo. Como estão 
     no semiplano esquerdo o sistema é estável à resposta ao degrau. Porém o pólo no zero torna o sistema
     mais lento.
@@ -84,7 +84,7 @@ grid
         \centering
         \includegraphics[width = 0.75\linewidth]{Figuras/ProblemasPI/Problema1/LGRsemControlador.eps}
         \caption{Lugar geométrico das raízes sem controlador}
-        \label{fig:LGR1Asem}                   
+        \label{fig:LGR1Bsem}                   
     \end{figure}
 
     O objetivo do controlador proporcional foi colocar um pólo em -2. Pelo LGR do sistema em MA, o pólo do zero
@@ -99,51 +99,51 @@ grid
     \end{figure}
 
 \newpage    
-\subsubsection*{c)}
+    \subsubsection*{c)}
 
-    Como anteriormente, o tempo de amostragem foi determinado pelo tempo de subida divido por dez. 
-    O sistema foi discretizado utilizando o segurador de ordem zero (ZoH). O Código \ref{Q1C} apresenta
-    a discretização do modelo e a criação do gráfico da resposta do sistema a entrada degrau.
+        Como anteriormente, o tempo de amostragem foi determinado pelo tempo de subida divido por dez. 
+        O sistema foi discretizado utilizando o segurador de ordem zero (ZoH). O Código \ref{Q1C} apresenta
+        a discretização do modelo e a criação do gráfico da resposta do sistema a entrada degrau.
 
-    \begin{lstlisting}[language=Matlab,label=Q1C,caption=Análise da estabilidade]
-Ts = stepinfo(Gmf).RiseTime/10; %Tr = 0.6000
-Gmfz = c2d(Gmf,Ts, 'zoh');
-[yz,tz] = step(Gmfz); %salvando resultado do step
+        \begin{lstlisting}[language=Matlab,label=Q1C,caption=Análise da estabilidade]
+    Ts = stepinfo(Gmf).RiseTime/10; %Tr = 0.6000
+    Gmfz = c2d(Gmf,Ts, 'zoh');
+    [yz,tz] = step(Gmfz); %salvando resultado do step
 
-figure %fazendo uma figura para comparar
-plot(t, y, 'LineWidth', 2)
-hold on
-stairs(tz, yz, 'LineWidth', 2);
-hold off
-legend('c(t)', 'c(kT)')
-grid
+    figure %fazendo uma figura para comparar
+    plot(t, y, 'LineWidth', 2)
+    hold on
+    stairs(tz, yz, 'LineWidth', 2);
+    hold off
+    legend('c(t)', 'c(kT)')
+    grid
 
-%utilizando MAPE para avaliacao numerica
-ape = abs((yz - y(1:length(yz)))/y(1:length(yz))); 
-mape = mean(ape(isfinite(ape))); %retira o erro percentual do y=0
-%mape = 3.2708e-04
-    \end{lstlisting}
+    %utilizando MAPE para avaliacao numerica
+    ape = abs((yz - y(1:length(yz)))/y(1:length(yz))); 
+    mape = mean(ape(isfinite(ape))); %retira o erro percentual do y=0
+    %mape = 3.2708e-04
+        \end{lstlisting}
 
-O tempo de amostragem obtido foi de 60 ms. A FT em MF disceta é apresentada na equação \ref{eq:Gmfz1}
-A Figura \ref{fig:Stepctds} apresenta a resposta dos sistema
-contínuo e discretizado sobrepostos. 
+    O tempo de amostragem obtido foi de 60 ms. A FT em MF disceta é apresentada na equação \ref{eq:Gmfz1}
+    A Figura \ref{fig:Stepctds} apresenta a resposta dos sistema
+    contínuo e discretizado sobrepostos. 
 
-\begin{equation}
-    G_{mf}(z) = \frac{0.0005503 z^2 + 0.002103 z + 0.0005029}{z^3 - 2.807 z^2 + 2.646 z - 0.8353}
-    \label{eq:Gmfz1}
-\end{equation}
+    \begin{equation}
+        G_{mf}(z) = \frac{0.0005503 z^2 + 0.002103 z + 0.0005029}{z^3 - 2.807 z^2 + 2.646 z - 0.8353}
+        \label{eq:Gmfz1}
+    \end{equation}
 
 
-\begin{figure}[!h]
-    \centering
-    \includegraphics[width = 0.75\linewidth]{Figuras/ProblemasPI/Problema1/resposta_ao_degrau.eps}
-    \caption{Lugar geométrico das raízes com controlador}
-    \label{fig:Stepctds}                   
-\end{figure}
+    \begin{figure}[!h]
+        \centering
+        \includegraphics[width = 0.75\linewidth]{Figuras/ProblemasPI/Problema1/resposta_ao_degrau.eps}
+        \caption{Lugar geométrico das raízes com controlador}
+        \label{fig:Stepctds}                   
+    \end{figure}
 
-Visualmente o sistema discreto se aproxima da resposta contínua. Porém, como vem sendo feito nessa 
-avaliação, verificamos a qualidade da discretização através do MAPE. Para essa discretização o 
-MAPE foi de $3,27 \cdot 10^{-2}$ \%. Um baixo valor de erro.
+    Visualmente o sistema discreto se aproxima da resposta contínua. Porém, como vem sendo feito nessa 
+    avaliação, verificamos a qualidade da discretização através do MAPE. Para essa discretização o 
+    MAPE foi de $3,27 \cdot 10^{-2}$ \%. Um baixo valor de erro.
 
 \subsubsection*{d)}
 
@@ -204,3 +204,87 @@ Para verificar a estabilidade, como nosso polinômio é de ordem 3, devemos conf
 Como o sistema discreto atende os quatro critérios de Jury necessários, é um sistema estável.
 
 \subsection*{Problema 2:}
+
+    A FT da planta é vista na equação \ref{eq:Gp2}. 
+
+    \begin{equation}
+        G_p = \frac{1}{(2.105s^+1)(0.095s+1)}
+        \label{eq:Gp2}
+    \end{equation}
+
+    Foi adicionado um controlador PI para obter uma configuração de polos e zeros específica. A equação \ref{eq:Gc2} apresenta
+    o ganho do controlador. 
+
+    \begin{equation}
+        G_c = kp + \frac{ki}{s}
+        \label{eq:Gc2}
+    \end{equation}
+
+    A FT do sistema em MF é então vista na equação \ref{eq:Gmf2}.
+
+    \begin{equation}
+        T(s) = \frac{5kp(s+\frac{kp}{ki})}{s^3+11s^2+5(1+kp)s+5ki}
+        \label{eq:Gmf2}
+    \end{equation}
+
+    Os ganhos do controlador foram determinado $kp=1.25$ e $ki = 2.5$. É pedido na questão a avaliação do erro em regime
+    estacionário a uma entrada degrau com ganho 5. 
+
+    \subsubsection*{a)}
+        Como no problema anterior, a estabilidade do sistema foi verificada através de uma entrada ao degrau. 
+        Pelo desenvolvimento analítico, o erro em regime estacionário deve ser zero a uma entrada ao degrau, 
+        espera-se obter o mesmo resultado pela simulação no MATLAB através do Código \ref{Q2A}.
+
+    \begin{lstlisting}[language=Matlab,label=Q2A,caption=Análise da estabilidade]
+clc;
+clear;
+close all;
+
+%FT sem controlador
+
+%FT da planta
+Gp = tf(1, conv([2.105 1],[0.095 1]));
+
+%FT do controlador
+kp = 1.25;
+ki = 2.5;
+Gc = tf([kp ki],[1 0]);
+
+Gma = Gp*Gc;
+Gmf = Gma/(1+Gma);
+
+%a) step com amplitude 5
+A = 5;
+[y,t] = step(A*Gmf);
+figure
+plot(t, y, 'LineWidth', 2);
+legend('c(t)')
+grid
+    \end{lstlisting}
+
+    A Figura \ref{fig:Q2A} apresenta a resposta do sistema ao degrau.  Através dela podemos ver que como ao esperado
+
+    \begin{figure}[!ht]
+        \centering
+        \includegraphics[width = 0.75\linewidth]{Figuras/ProblemasPI/Problema2/step.eps}
+        \caption{Gráfico da resposta ao degrau do sistema}
+        \label{fig:Q2A}                   
+    \end{figure}
+
+
+
+\newpage
+\subsection*{b) }
+
+    A Figura \ref{fig:LGR2Bsem} é o LGR do sistema sem o controlador. Através dela pode-se verificar que
+    o sistema possui dois pólos puramente reais no semiplano esquerdo do domínio \textit{s}. Junto a isso,
+    podemos ver que os pólos deslizam sobre o eixo real ao variar o ganho, até se encontrarem e 
+    tornarem-se complexos.
+    
+    \begin{figure}[!ht]
+        \centering
+        \includegraphics[width = 0.75\linewidth]{Figuras/ProblemasPI/Problema2/LGRsemcontrolador.eps}
+        \caption{Lugar geométrico das raízes sem controlador}
+        \label{fig:LGR2Bsem}                   
+    \end{figure}
+
