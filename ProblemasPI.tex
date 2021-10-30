@@ -495,6 +495,24 @@ grid
         \label{fig:LGR3Bcom}                   
     \end{figure}
 
+    O bloco de código \ref{Q3B} apresenta o \textit{script} utilizado para obter os LGRs.
+
+\begin{lstlisting}[language=Matlab,label=Q3B,caption= Análise da estabilidade]
+        % b)
+        % LGR sem controlador
+        figure
+        rlocus(Gp)
+        axis([-21 1 -5 5])
+        title('LGR sem controlador')
+        grid
+        % LGR com controlador
+        figure
+        rlocus(Gmf)
+        axis([-21 1 -5 5])
+        title('LGR com controlador')
+        grid
+ \end{lstlisting}
+
 
 \newpage
 \subsubsection*{c)}
